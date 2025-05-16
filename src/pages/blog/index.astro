@@ -1,0 +1,36 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import { getCollection } from 'astro:content';
+import FormattedDate from '../../components/FormattedDate.astro';
+
+const posts = await getCollection('blog');
+posts.sort((a, b) => b.data.pubDate.getTime() - a.data.pubDate.getTime());
+
+const pageTitle = "Blog";
+const pageDescription = "The blog listing page for Heritage Harvest Recipes.";
+---
+
+<BaseLayout title={pageTitle} description={pageDescription}>
+  <div class="container mx-auto py-8">
+    <h1 class="text-3xl font-bold mb-4">{pageTitle}</h1>
+    <p class="mb-4">Explore our stories and discover the heritage behind the recipes.</p>
+
+    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+      {posts.map((post) => (
+        <div class="bg-white rounded-lg shadow-md p-4">
+          <a href={`/blog/${post.slug}/`} class="hover:underline">
+            <h2 class="text-xl font-semibold mb-2">{post.data.title}</h2>
+          </a>
+          <FormattedDate date={post.data.pubDate} class="text-gray-600 mb-2" />
+          <p class="text-gray-700">{post.data.description}</p>
+        </div>
+      ))}
+    </div>
+
+    {/* Placeholder for pagination if needed */}
+    {/* <div class="mt-8">
+      <button class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">Previous</button>
+      <button class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded ml-2">Next</button>
+    </div> */}
+  </div>
+</BaseLayout>
